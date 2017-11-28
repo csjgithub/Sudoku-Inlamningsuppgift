@@ -1,27 +1,85 @@
 
 public class Sudoku {
-	private int[][] doku;
-	private boolean success;
+	int[][] doku;
+	int[][] matrixcopy;
+	// ||not used currently|| private boolean success;
 
-	public boolean Sudoku(int[][] matrix) {
+	public Sudoku(int[][] matrix) {
 		doku = matrix;
-		
-									// Vet inte om vi vill kolla huruvida sudokut är legalt från början
-		success=solve(0,0);
-		
-		return success;
+		matrixcopy=matrix;
 	}
 
 	
 	
-	private boolean solve(int x, int y) {
-		int[] solutions=possibleSolutions(x,y);
+	public boolean solve(int x, int y) {
 		if (x == 9 && y == 8) {
 			return true;
 		}else if (x > 8 ) {
 			x=0;
 			y=y+1;
 		}
+		//Om det redan är ifyllt
+		int[] solutions=possibleSolutions(x,y);
+		if (doku[x][y] != 0) {
+			if (!legalNumber(doku[x][y],x,y) ) {
+				return false;
+			}else {
+				return solve(x+1,y);
+			}
+		}else {
+			
+			for (int i=0; i<9; i++) {
+				if (solutions[i] == 1) {
+					doku[x][y] = i+1;
+					if(!(solve(x+1,y))){
+						System.out.println("asd");
+						// Om matrix (inmatrisen) innehåller ett värde i (x,y) vill vi behålla det
+				//		if (matrixcopy[x][y] == 0) {
+						
+			//			}else {
+				//			doku[x][y] = matrixcopy[x][y];
+				//		}
+
+						
+						// Här kommer vi stryka ut inskickade värden - lägga in en if(matrix.contains..)? Ja.
+					}else {
+						return true;
+					}
+				}
+			}
+			doku[x][y]=0;
+			return false;
+		}
+		
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+/*		
+		if ( doku[x][y] != 0 && (legalNumber(doku[x][y],x,y) == false)) {
+				return false;
+		}else {
+		
+		int[] solutions=possibleSolutions(x,y);
+
 		for (int i=0; i<9; i++) {
 			if (solutions[i] == 1) {
 				doku[x][y] = i+1;
@@ -33,12 +91,12 @@ public class Sudoku {
 				}
 			}
 		}
-		
-		return true;
-		
-		
+		}
 
-		//return true;
+		
+		
+		return false;
+		//return true;*/
 	}
 	
 	
