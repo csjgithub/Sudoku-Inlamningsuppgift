@@ -10,7 +10,6 @@ public class Sudoku {
 	}
 
 	
-	
 	public boolean solve(int x, int y) {
 		if (x == 9 && y == 8) {
 			return true;
@@ -18,7 +17,7 @@ public class Sudoku {
 			x=0;
 			y=y+1;
 		}
-		//Om det redan är ifyllt
+		//Om det redan ï¿½r ifyllt
 		int[] solutions=possibleSolutions(x,y);
 		if (doku[x][y] != 0) {
 			if (!legalNumber(doku[x][y],x,y) ) {
@@ -32,7 +31,13 @@ public class Sudoku {
 				if (solutions[i] == 1) {
 					doku[x][y] = i+1;
 					if(!(solve(x+1,y))){
+
 				//		System.out.println("asd");
+
+						System.out.println("asd");
+
+						// Hï¿½r kommer vi stryka ut inskickade vï¿½rden - lï¿½gga in en if(matrix.contains..)? Ja.
+
 					}else {
 						return true;
 					}
@@ -41,65 +46,17 @@ public class Sudoku {
 			doku[x][y]=0;
 			return false;
 		}
-		
-	
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-/*		
-		if ( doku[x][y] != 0 && (legalNumber(doku[x][y],x,y) == false)) {
-				return false;
-		}else {
-		
-		int[] solutions=possibleSolutions(x,y);
-
-		for (int i=0; i<9; i++) {
-			if (solutions[i] == 1) {
-				doku[x][y] = i+1;
-				if(solve(x+1,y) == false) {
-					doku[x][y] = 0;
-					if (i==8) {
-						return false;
-					}
-				}
-			}
-		}
-		}
-
-		
-		
-		return false;
-		//return true;*/
 	}
 	
-	
-	//Hittar möjliga lösningar för rutan i koordinat (x,y)
+	//Hittar mï¿½jliga lï¿½sningar fï¿½r rutan i koordinat (x,y)
 	public int[] possibleSolutions(int x, int y) {
 		int[] solutions = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
 		
 		if (doku[x][y] == 0) {
 		for (int i=1; i<10; i++) {
 			if (legalNumber(i,x,y)) {
-				solutions[i-1] = 1;						// 1 betyder att t.ex. solutions [6] är ett möjligt svar
-			}											// dvs vi kan potentiellt sätta in en sexa. 	
+				solutions[i-1] = 1;						// 1 betyder att t.ex. solutions [6] ï¿½r ett mï¿½jligt svar
+			}											// dvs vi kan potentiellt sï¿½tta in en sexa. 	
 		}
 		}
 		
@@ -108,10 +65,10 @@ public class Sudoku {
 	
 	
 	
-	//Kollar om det gissade lösningsvärdet är tillåtet (inte finns i x- eller y-led eller i lådan)
+	//Kollar om det gissade lï¿½sningsvï¿½rdet ï¿½r tillï¿½tet (inte finns i x- eller y-led eller i lï¿½dan)
 	public boolean legalNumber(int a, int x, int y) {
 		
-		//Kollar i x-led om a redan finns där
+		//Kollar i x-led om a redan finns dï¿½r
 		for (int bredd=0; bredd<9; bredd++) {
 			if (!(bredd == x)) {
 				if (doku[bredd][y] == a) {			
@@ -120,7 +77,7 @@ public class Sudoku {
 			}
 		}
 		
-		//Kollar i y-led om a redan finns där
+		//Kollar i y-led om a redan finns dï¿½r
 		for (int hojd=0; hojd<9; hojd++) {
 			if (!(hojd==y)) {
 				if (doku[x][hojd] == a) {			
@@ -129,8 +86,8 @@ public class Sudoku {
 			}
 		}
 		
-		//Kollar i "lådan" efter samma tal
-		// Sätter startvariablerna till övre vänstra hörnet i lådan
+		//Kollar i "lï¿½dan" efter samma tal
+		// Sï¿½tter startvariablerna till ï¿½vre vï¿½nstra hï¿½rnet i lï¿½dan
 		int startx = x-x%3;					
 		int starty = y-y%3;
 		
@@ -142,9 +99,9 @@ public class Sudoku {
 			}
 		}
 		
-		//Om a finns i varken x- eller y-led eller lådan är värdet tillåtet
+		//Om a finns i varken x- eller y-led eller lï¿½dan ï¿½r vï¿½rdet tillï¿½tet
 		return true;								
-		//TODO: Behöver man egentligen kolla så att man inte kollar i [x][y]? Det kommer
+		//TODO: Behï¿½ver man egentligen kolla sï¿½ att man inte kollar i [x][y]? Det kommer
 		//Ju egentligen bara vara en nolla vilket aldrig kommer == a.. 
 	}
 
