@@ -32,16 +32,7 @@ public class Sudoku {
 				if (solutions[i] == 1) {
 					doku[x][y] = i+1;
 					if(!(solve(x+1,y))){
-						System.out.println("asd");
-						// Om matrix (inmatrisen) innehåller ett värde i (x,y) vill vi behålla det
-				//		if (matrixcopy[x][y] == 0) {
-						
-			//			}else {
-				//			doku[x][y] = matrixcopy[x][y];
-				//		}
-
-						
-						// Här kommer vi stryka ut inskickade värden - lägga in en if(matrix.contains..)? Ja.
+				//		System.out.println("asd");
 					}else {
 						return true;
 					}
