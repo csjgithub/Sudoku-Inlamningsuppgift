@@ -55,14 +55,7 @@ public class Main_sudoku extends Application {
 		top.setPrefHeight(20);
 		root.setTop(top);
 		
-		//Skapa 9x9 TextFields i en matris och lägg till dessa till som children till vår TilePane som är i mitten av 
-		//vår BorderPane (den enda som vi egentligen använder). 
-		//Matrisen är nice för där kan vi sedan loopa matrix[i][j].getText() för att hämta siffrorna som skrivs in.
-		//Vi får alltså en koppling till varje TextField. Om alla TextFields bara skapas i loopen utan att läggas in 
-		//i matrisen så får vi 81 TextFields med samma namn --> alltså svårt att anropa de olika när vi ska hämta siffor. 
-		//Problemet här är dock att våra 81 TextFields inte kommer se ut som en 9x9 matris när vi kör programmet, de kommer
-		//bara läggas efter varandra så mycket det går beroende på hur stort fönstret är. Hitta gärna något kommando som 
-		//kan begränsa varje rad till 9 TextFields så att det ser ut som ett sudoku. 
+		//Skapa en matris där textfields läggs in 
 		TextField[][] matrix = new TextField[9][9];
 
 	    for (int i = 0; i <9; i++) {
@@ -73,12 +66,13 @@ public class Main_sudoku extends Application {
 	    		matrix[i][j].setAlignment(Pos.CENTER);
 	    		matrix[i][j].setVisible(true);
 	    		matrix[i][j].setEditable(true);
-	    		matrix[i][j].setText("0");
+	    		matrix[i][j].setText("");
 	    		tilepane.getChildren().add(matrix[i][j]);
 	    	}
 	    }
 		
-		//Skapa en HBox med två buttons "Solve" och "Clear"
+		//SKAPA NYA KNAPPAR  
+		//Skapa en HBox med tre buttons "Solve", "Clear" och "New Sudoku"
 		HBox hbox = new HBox(); 
 		Button solve = new Button("Solve");		
 		HBox.setHgrow(solve, Priority.ALWAYS);
@@ -88,17 +82,32 @@ public class Main_sudoku extends Application {
 		HBox.setHgrow(clear, Priority.ALWAYS);
 		clear.setMaxWidth(Double.MAX_VALUE); 
 		
-		hbox.getChildren().addAll(solve, clear); 
+		Button ny = new Button("New Sudoku");
+		HBox.setHgrow(ny, Priority.ALWAYS);
+		ny.setMaxWidth(Double.MAX_VALUE); 
+		
+		Button check = new Button("Check solution");
+		HBox.setHgrow(check, Priority.ALWAYS);
+		check.setMaxWidth(Double.MAX_VALUE); 
+		
+		hbox.getChildren().addAll(solve, clear, ny, check); 
 		root.setBottom(hbox);  
 		
-
+		// Skapar en sudokulasare som ger nya sudokun
+		SudokuReader sudoreader = new SudokuReader();
+		
+		//SKAPA ACTIONS TILL KNAPPAR  
 		//Vad som händer när man trycker på solve
 		solve.setOnAction(event -> {
 			root.setTop(top); 
 			int[][] solvedMatrix = new int[9][9]; 
 			for (int i=0; i<9;i++) {
 				for (int j=0; j<9; j++) {
+					if (matrix[i][j].getText().equals("")) {
+						solvedMatrix[i][j]=0; 
+					} else {
 					solvedMatrix [i][j] = Integer.parseInt(matrix[i][j].getText());
+					}
 				}
 			}
 			//Testa lösa sudokut
@@ -122,10 +131,59 @@ public class Main_sudoku extends Application {
 			root.setTop(top); 
 			for (int i=0; i<9;i++) {
 				for (int j=0; j<9; j++) {
-					matrix[i][j].setText("0");;
+					matrix[i][j].setText("");;
 				}
 			}
 			}); 
+		
+		//Vad som hander nar man trycker på "New Sudoku"
+		ny.setOnAction(event -> {
+			int [][] newMatrix = sudoreader.newSudoku();
+			for (int k=0; k<9; k++){
+				for (int m=0; m<9; m++) {
+					if (newMatrix[k][m] == 0){
+						matrix[k][m].setText("");
+					}else{
+					matrix[k][m].setText(Integer.toString(newMatrix[k][m])); 
+				}}
+			}
+			}); 
+		
+		//Klicka check ok en kopia av textmatris skapas
+				check.setOnAction(event -> {
+					root.setTop(top); 
+					int[][] solvedMatrix = new int[9][9]; 
+					for (int i=0; i<9;i++) {
+						for (int j=0; j<9; j++) {
+							if (matrix[i][j].getText().equals("")) {
+								solvedMatrix[i][j]=0; 
+							} else {
+							solvedMatrix [i][j] = Integer.parseInt(matrix[i][j].getText());
+							}
+						}
+					}
+					// Matrisen kollas och ger felmeddelande
+					for (int i=0; i<9;i++) {
+						for (int j=0; j<9; j++) {
+							if (solvedMatrix[i][j] == 0) {
+								Label label = new Label("Your sudoku is not completed. Try again!");
+								root.setTop(label);
+								return;
+							}
+								
+						}
+								
+					}
+					Sudoku sudo = new Sudoku(solvedMatrix);
+					if (sudo.solver(0, 0)) {
+						Label label = new Label("Success!");
+						Toolkit.getDefaultToolkit().beep();
+						root.setTop(label);
+					}else {
+						Label label = new Label("Your sudoku contains a major error. Try again!");
+						root.setTop(label);
+					}
+				});			
 	}
 		
 
