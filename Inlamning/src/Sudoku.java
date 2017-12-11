@@ -1,16 +1,16 @@
 
 public class Sudoku {
 	int[][] doku;
-	int[][] matrixcopy;
-	// ||not used currently|| private boolean success;
 
 	public Sudoku(int[][] matrix) {
 		doku = matrix;
-		matrixcopy=matrix;
 	}
 
+	public int[][] solve() {
+		return doku; 
+	}
 	
-	public boolean solve(int x, int y) {
+	public boolean solver(int x, int y) {
 		if (x == 9 && y == 8) {
 			return true;
 		}else if (x > 8 ) {
@@ -23,18 +23,14 @@ public class Sudoku {
 			if (!legalNumber(doku[x][y],x,y) ) {
 				return false;
 			}else {
-				return solve(x+1,y);
+				return solver(x+1,y);
 			}
 		}else {
 			
 			for (int i=0; i<9; i++) {
 				if (solutions[i] == 1) {
 					doku[x][y] = i+1;
-					if(!(solve(x+1,y))){
-
-				//		System.out.println("asd");
-
-						System.out.println("asd");
+					if(!(solver(x+1,y))){
 
 						// H�r kommer vi stryka ut inskickade v�rden - l�gga in en if(matrix.contains..)? Ja.
 

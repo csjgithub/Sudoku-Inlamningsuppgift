@@ -1,7 +1,9 @@
+import java.awt.Toolkit;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -30,6 +32,8 @@ public class Main_sudoku extends Application {
 		tilepane.setStyle(styles);
 		tilepane.setVgap(0);
 		tilepane.setHgap(0);
+		tilepane.setMaxWidth(452);
+		tilepane.setMaxHeight(452);
 		root.setCenter(tilepane);
 		
 		//Skapa några fina TilePanes runt vår TilePane i center som en ram(inget läggs in i dessa)
@@ -48,7 +52,7 @@ public class Main_sudoku extends Application {
 		root.setRight(right);
 
 		TilePane top = new TilePane();
-		top.setPrefHeight(50);
+		top.setPrefHeight(20);
 		root.setTop(top);
 		
 		//Skapa 9x9 TextFields i en matris och lägg till dessa till som children till vår TilePane som är i mitten av 
@@ -63,51 +67,65 @@ public class Main_sudoku extends Application {
 
 	    for (int i = 0; i <9; i++) {
 	    	for (int j=0; j<9; j++) {
-	    		matrix[i][j] = new TextField();
+	    		matrix[i][j] = new OneLetterTextField();
 	    		matrix[i][j].setPrefWidth(50);
 	    		matrix[i][j].setPrefHeight(50);
 	    		matrix[i][j].setAlignment(Pos.CENTER);
+	    		matrix[i][j].setVisible(true);
+	    		matrix[i][j].setEditable(true);
+	    		matrix[i][j].setText("0");
 	    		tilepane.getChildren().add(matrix[i][j]);
 	    	}
 	    }
 		
 		//Skapa en HBox med två buttons "Solve" och "Clear"
 		HBox hbox = new HBox(); 
-		Button btn1 = new Button("Solve");		
-		HBox.setHgrow(btn1, Priority.ALWAYS);
-		btn1.setMaxWidth(Double.MAX_VALUE); 
+		Button solve = new Button("Solve");		
+		HBox.setHgrow(solve, Priority.ALWAYS);
+		solve.setMaxWidth(Double.MAX_VALUE); 
 		
-		Button btn2 = new Button("Clear");
-		HBox.setHgrow(btn2, Priority.ALWAYS);
-		btn2.setMaxWidth(Double.MAX_VALUE); 
+		Button clear = new Button("Clear");
+		HBox.setHgrow(clear, Priority.ALWAYS);
+		clear.setMaxWidth(Double.MAX_VALUE); 
 		
-		hbox.getChildren().addAll(btn1, btn2); 
+		hbox.getChildren().addAll(solve, clear); 
 		root.setBottom(hbox);  
 		
-		//Gammal kod från BookReaderController som kan hjälpa oss med actions som sker när buttons aktiveras. 
-		
-		//D7
-//		btn1.setOnAction(event -> {
-//			System.out.println("hej");
-//			}); 
-		
-//		//Ordnar listan i bokstavsordning
-//		btn1.setOnAction(event -> {
-//			words.sort((e1,e2) -> e1.getKey().compareTo(e2.getKey()));
-//			}); 
 
+		//Vad som händer när man trycker på solve
+		solve.setOnAction(event -> {
+			root.setTop(top); 
+			int[][] solvedMatrix = new int[9][9]; 
+			for (int i=0; i<9;i++) {
+				for (int j=0; j<9; j++) {
+					solvedMatrix [i][j] = Integer.parseInt(matrix[i][j].getText());
+				}
+			}
+			//Testa lösa sudokut
+			Sudoku sudo = new Sudoku(solvedMatrix); 
+			if(sudo.solver(0, 0)) {
+				int finishedMatrix[][] = sudo.solve(); 
+				for (int k=0; k<9; k++) {
+					for (int m=0; m<9; m++) {
+						matrix[k][m].setText(Integer.toString(finishedMatrix[k][m])); 
+					}
+				}
+			} else { //Om det inte går att lösa så ska det komma ett felmeddelande
+				Label label = new Label("Error message: NOT POSSIBLE TO SOLVE. TRY WITH NEW VALUES!");
+				Toolkit.getDefaultToolkit().beep();
+				root.setTop(label);
+			}
+			}); 
 		
-//		//Scrollar till det sökta ordet om det finns i listan 
-//		btn3.setOnAction(event-> {
-//			String searchWord = find.getText(); 
-//			for (int i=0; i<words.size(); i++) {
-//				if (words.get(i).getKey().equals(searchWord)) {
-//					listView.scrollTo(i);
-//				}
-//			}
-//		});
-//		btn3.setDefaultButton(true);
-		
+		//Vad som händer när man trycker på clear
+		clear.setOnAction(event -> {
+			root.setTop(top); 
+			for (int i=0; i<9;i++) {
+				for (int j=0; j<9; j++) {
+					matrix[i][j].setText("0");;
+				}
+			}
+			}); 
 	}
 		
 
